@@ -21,7 +21,7 @@ Public final-release tag is gated on the validation evidence. If feedback is nee
 
 Items that don't block launch but are tracked work:
 
-- **Architecture explainer** — long-form `docs/ARCHITECTURE.md` covering why three frameworks compose, where to make changes, and the honest-framing principle in detail.
+- **Architecture explainer — deeper coverage.** Initial [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) ships with v0.4.0; deeper per-skill reference docs and walkthroughs of specific orchestration paths can iterate post-launch.
 - **Remaining 5 Fast Mode validation slots** — continue accumulating evidence post-launch; informs any v0.4.x adjustments to the Fast Mode classifier or hard requirements.
 - **OpenCode-only GSD support** — currently unsupported (see `opencode/README.md`). Either ship a working workaround against the actual upstream layout, or wait for the upstream installer to ship native OpenCode skills.
 - **Release workflow** — GitHub Action that builds bundle zips on tag push and attaches them to the Release. Avoids the v0.2.3-class bundle-drift bug recurring publicly.
