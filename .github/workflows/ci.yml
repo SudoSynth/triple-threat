@@ -28,3 +28,6 @@ jobs:
 
       - name: "opencode: mirror in sync"
         run: bash opencode/scripts/sync-bundle.sh --check
+
+      - name: "fresh install smoke test"
+        run: bash scripts/test-fresh-install.sh
