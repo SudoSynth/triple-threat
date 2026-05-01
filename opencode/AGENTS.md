@@ -1,0 +1,153 @@
+# Project — Triple Threat Pipeline
+
+## Project Memory
+
+Before changing Triple Threat itself, read `MEMORY.md` first. It records the current v0.3.1 baseline, release history, source-of-truth folders, stale folder warnings, locked decisions, and open backlog. `PROJECT_MEMORY.md` contains the longer archival version.
+
+## Critical Routing
+
+If the user's entire message is `start`, `getting started`, `how do I begin`, or a close variant asking how to use this project, immediately run the onboarding protocol below. Do not answer with a general explanation first.
+
+OpenCode has two separate extension surfaces:
+- `.opencode/commands/<name>.md` or `~/.config/opencode/commands/<name>.md` creates user-facing slash commands like `/build-feature`.
+- `.opencode/skills/<name>/SKILL.md` or `~/.config/opencode/skills/<name>/SKILL.md` creates agent-loadable skills used by those commands.
+
+When a `/build-*` command runs, it forwards to the matching skill through the Skill tool. When chaining internally, invoke skills by bare name, for example `build-map`, not `/build-map`.
+
+This project uses the **Triple Threat unified build pipeline** (Superpowers + GStack + GSD). All feature work, bug fixes, and changes go through `/build-feature`, which orchestrates planning, execution, code review, browser QA, and shipping in one command.
+
+---
+
+## Onboarding — when the user says "start"
+
+**If the user types `start`, `getting started`, `how do I begin`, or asks how to use this project**, walk through this protocol:
+
+1. Run the **setup checklist** below. Report each as ✓ or ✗.
+2. Show the **command quick reference**.
+3. Tell them what state the project is in (fresh / mid-feature / etc.) based on `.planning/`.
+4. Ask what they want to do first.
+
+### Setup checklist
+
+Verify each in order. If any of checks 1–4 fails, stop and tell the user how to fix before continuing.
+
+1. **Triple Threat orchestrator installed?** Run `ls .opencode/skills/build-feature/SKILL.md .opencode/commands/build-feature.md 2>/dev/null || ls ~/.config/opencode/skills/build-feature/SKILL.md ~/.config/opencode/commands/build-feature.md`. If both project-local and global checks fail, the user needs to install both the Triple Threat skills and command files.
+
+2. **GSD installed?** Run `ls ~/.config/opencode/skills/gsd-new-project/ ~/.config/opencode/skills/gsd-execute-phase/`. If missing: `npx get-shit-done-cc@latest --opencode --global`.
+
+3. **GStack installed?** Run `ls ~/.config/opencode/skills/gstack/autoplan/SKILL.md`. If missing: clone `https://github.com/garrytan/gstack.git` to `~/.config/opencode/skills/gstack/` and run its `./setup --host opencode` (requires `bun` runtime; install via `brew install oven-sh/bun/bun`).
+
+4. **Superpowers installed?** Run `ls ~/.config/opencode/skills/superpowers-test-driven-development/SKILL.md`. If missing: clone `https://github.com/obra/superpowers.git` to `~/.config/opencode/plugins/superpowers/` and symlink each skill dir into `~/.config/opencode/skills/` with a `superpowers-` prefix.
+
+5. **Workspace bootstrapped?** Run `ls -d .planning/ 2>/dev/null`. Missing is **expected** for a fresh project — `/build-feature` will auto-bootstrap on first run.
+
+6. **Codebase mapped?** Run `ls .planning/codebase/STACK.md 2>/dev/null`. Missing is **expected** for a fresh project — `/build-feature` will auto-map on first run.
+
+---
+
+## Command quick reference
+
+| Command | When to use | What it does |
+|---|---|---|
+| `/build-feature <description>` | Default — any feature, fix, or change | Walks the full pipeline end-to-end |
+| `/build-init` | Inherited a codebase, want it prepped | Bootstrap workspace + run codebase map |
+| `/build-map` | After major refactor | Refresh codebase analysis |
+| `/build-spec` | Have an idea, not committed yet | Discuss + write spec |
+| `/build-plan` | Have a spec from elsewhere | Pressure-test + structured task list |
+| `/build-exec` | Pipeline died mid-exec | Resume execution with TDD discipline |
+| `/build-review` | Wrote code by hand | Multi-pass code review |
+| `/build-qa` | Manually edited UI | Browser QA verification |
+| `/build-ship` | Want PR automation only | VERSION + CHANGELOG + GitHub PR |
+| `/build-debug <bug>` | Want explicit debug rigor with control over fix flow | Investigation first, then asks to continue into pipeline |
+| `/triple-threat` | Forgot what's available | Layered architecture overview |
+
+For most work, just type `/build-feature <what you want>`. The OpenCode command file forwards that request to the `build-feature` skill. The other commands are escape hatches for when reality breaks the happy path.
+
+---
+
+## Operating principles
+
+**One command for most work.** `/build-feature` is the default verb. Reach for phase commands only when you need surgical access to a specific stage.
+
+**Look for existing patterns first.** Before writing new code or making decisions:
+- Read `.planning/codebase/CONVENTIONS.md` — patterns this codebase already uses
+- Read `.planning/codebase/CONCERNS.md` — known fragile areas to avoid
+- Check recent commits for how similar problems were solved
+
+**Trust the spine.** GSD owns `.planning/`. Don't manually edit files in there unless you know exactly what you're doing — let the skills manage their own state. If something goes wrong, use `/gsd-debug` or surface it to the user rather than hand-editing.
+
+**Fix and document.** When something breaks:
+1. Read the actual error, identify the root cause
+2. Fix it (don't paper over with workarounds)
+3. If a skill failed, edit the SKILL.md and commit the fix
+4. Document the lesson in the appropriate `.planning/<phase>/` artifact so the same issue doesn't waste time twice
+
+**Self-improvement loop.** Every failure is a chance to make the system stronger. If you encounter a pattern of issues, surface it — don't just patch around it.
+
+**Builder hygiene.** When writing or modifying code:
+- Prefer the smallest correct change.
+- Do not add speculative features, abstractions, or configurability.
+- Touch only files needed for the user's request.
+- Do not refactor adjacent code unless required.
+- If ambiguity affects architecture, data model, or irreversible work, stop and ask.
+- Verify before claiming done.
+
+---
+
+## File structure
+
+```
+.planning/                        ← GSD's state spine — durable across sessions
+├── codebase/                     ← cheat sheets from /build-map (one-time per repo)
+│   ├── STACK.md, ARCHITECTURE.md, STRUCTURE.md
+│   ├── INTEGRATIONS.md, CONVENTIONS.md, TESTING.md, CONCERNS.md
+├── <phase>/                      ← per-feature artifacts
+│   ├── CONTEXT.md, RESEARCH.md, SPEC.md
+│   ├── PLAN.md, SUMMARY.md, VERIFICATION.md
+├── debug/                        ← persistent debug sessions (survive context resets)
+└── threads/                      ← cross-phase context
+
+AGENTS.md (this file)             ← project onboarding + behavioral guardrails
+```
+
+**Don't manually edit `.planning/`** — let the orchestrator and underlying skills manage it. To clean up, use `/gsd-cleanup` or remove the entire `.planning/` directory.
+
+---
+
+## Multi-session work
+
+This project is set up for multi-session work. If a feature takes more than one OpenCode session:
+- Use `/gsd-pause-work` before stopping — saves a `HANDOFF.json` snapshot
+- Use `/gsd-resume-work` when returning — rehydrates from the snapshot
+- All `.planning/` artifacts persist across sessions automatically
+
+If you've lost context mid-feature, `/gsd-progress` shows where you are.
+
+---
+
+## When NOT to use the pipeline
+
+The `/build-*` pipeline is designed for substantive work. Skip it for:
+- One-line config tweaks (`vim` is faster)
+- Trivial typo fixes (`/gsd-fast` if you want guarantees but no overhead)
+- Pure exploration with no commit intent
+
+Use the pipeline when you'd otherwise want a structured plan, code review, or PR.
+
+---
+
+## More info
+
+- `/triple-threat` — full architecture overview
+- `.opencode/commands/triple-threat.md` or `~/.config/opencode/commands/triple-threat.md` — user-facing OpenCode command
+- `.opencode/skills/triple-threat/` or `~/.config/opencode/skills/triple-threat/` — orchestrator skill source if you need to inspect or modify
+- `~/.config/opencode/skills/gsd-help` — full GSD command catalog
+- `~/.config/opencode/skills/gstack/README.md` — full GStack documentation
+
+---
+
+## Bottom line
+
+You sit between what the user wants (a feature) and the underlying frameworks that deliver it. Your job: read intent, dispatch to the right `/build-*` command, surface gates only when the user actually needs to decide something.
+
+Stay pragmatic. Stay reliable. Keep the pipeline boring.
