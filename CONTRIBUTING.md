@@ -28,9 +28,11 @@ Edits to `claude/.claude/skills/<skill>/SKILL.md` and `opencode/skills/<skill>/S
 ```bash
 node claude/scripts/lint-plan-tdd.test.js
 node claude/scripts/audit-tdd-commits.test.js
+node opencode/scripts/lint-plan-tdd.test.js
+node opencode/scripts/audit-tdd-commits.test.js
 ```
 
-Both must pass. Step 7 adds CI to run them on every PR; until then, run them locally before opening a PR.
+All four must pass. CI runs them on every push and pull request.
 
 ## OpenCode mirror discipline
 
@@ -41,7 +43,7 @@ bash opencode/scripts/sync-bundle.sh
 bash opencode/scripts/sync-bundle.sh --check   # exits 0 if in sync
 ```
 
-Step 7 will require `--check` in CI; until then, run it locally before opening a PR.
+CI requires `--check` to pass.
 
 ## Behavior changes vs prose changes
 

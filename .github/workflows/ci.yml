@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: "claude: lint-plan-tdd"
+        run: node claude/scripts/lint-plan-tdd.test.js
+
+      - name: "claude: audit-tdd-commits"
+        run: node claude/scripts/audit-tdd-commits.test.js
+
+      - name: "opencode: lint-plan-tdd"
+        run: node opencode/scripts/lint-plan-tdd.test.js
+
+      - name: "opencode: audit-tdd-commits"
+        run: node opencode/scripts/audit-tdd-commits.test.js
+
+      - name: "opencode: mirror in sync"
+        run: bash opencode/scripts/sync-bundle.sh --check
