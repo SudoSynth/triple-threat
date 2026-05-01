@@ -1,6 +1,6 @@
 ---
 name: build-feature
-description: "Triple Threat orchestrator with adaptive assurance. Fast for small precise tasks, Standard for normal features, Full for risky/demanding work. Combines GSD spine, GStack review/qa/ship, and Superpowers TDD discipline when the selected tier needs them. Run for any feature, bugfix, or change. Auto-bootstraps workspace and codebase map on first run."
+description: "Triple Threat orchestrator with adaptive assurance. Fast for small precise tasks, Standard (default) for everything else including risky/demanding work. Combines GSD spine, GStack review/qa/ship, and Superpowers TDD discipline when the selected tier needs them. Run for any feature, bugfix, or change. Auto-bootstraps workspace and codebase map on first run."
 argument-hint: "<feature description or ticket ID> [--skip-map] [--remap] [--no-ai] [--skip-qa]"
 allowed-tools:
   - Read
@@ -235,7 +235,7 @@ Before Stage 1 (SPEC), classify the user's request semantically (not by keyword 
 
 **If no bug-fix signals detected:** proceed to tier classification (below).
 
-## Tier classification (Fast / Standard / Full)
+## Tier classification (Fast / Standard)
 
 After pre-flight passes and bug-fix detection routes (or doesn't), classify the feature request to decide pipeline weight. Skip this section entirely if the bug-fix path was taken — debugging has its own routing.
 
@@ -248,27 +248,28 @@ Signals that suggest **Fast** (small, low-risk):
 - No UI flow changes (no new pages, no major component additions)
 - Targeted tests have obvious pass/fail criteria
 
-Signals that suggest **Full** (risky, demanding):
+Signals that suggest **Standard** (everything else, including risky/demanding):
 - ≥2 risk signals from: auth, payment, migration, schema, security, AI/LLM, large UI
 - Cross-cutting architecture (touches multiple modules)
 - User explicitly asks for "full pipeline" or "thorough review"
+- Any Fast signal clearly absent
 
 ### Classification rule
 
-- ≥2 Full signals → Full
-- 0 Full signals AND at least 3 Fast signals AND precise spec → Fast
-- Else → **Standard (default)**
+- ≥3 Fast signals AND precise spec AND no risk signals → **Fast**
+- Otherwise → **Standard (default)**
 
-If unambiguous (clear Fast or clear Full), proceed silently and note the routing: "Routing as Fast Mode — small precise feature." or "Routing as Full Mode — security-sensitive change."
+Risky and demanding work routes to Standard, not Fast. Standard runs the full pipeline (spec + plan + exec + review + qa + ship) with `/cso` available conditionally for security-sensitive paths and `/design-review` available for UI-heavy work. Heavier gates beyond Standard (mandatory `/cso`, mandatory `/design-review`, stricter ambiguity gate, mandatory codebase mapping) are deferred until validated against real workloads.
+
+If unambiguous (clear Fast or clear Standard), proceed silently and note the routing: "Routing as Fast Mode — small precise feature." or "Routing as Standard Mode — risky change requiring full review."
 
 If ambiguous, use AskUserQuestion with the recommendation pre-selected:
 
 > "This looks like [classification]. How should I proceed?"
 > 1. Fast Mode (recommended): focused TDD + Superpowers review + commit
-> 2. Standard Mode: today's pipeline (spec + plan + exec + review + qa + ship)
-> 3. Full Triple Threat: complete current pipeline, reserved for risky/demanding work
+> 2. Standard Mode: complete pipeline (spec + plan + exec + review + qa + ship)
 
-**Default: Standard.** Only deviate when criteria are clearly met OR the user explicitly chose otherwise.
+**Default: Standard.** Only deviate to Fast when criteria are clearly met OR the user explicitly chose otherwise.
 
 ## Fast Mode flow
 
@@ -298,7 +299,7 @@ Fast Mode keeps discipline but skips ceremony. It is NOT a shortcut around revie
 
 - `/build-spec` (scope confirmation prose replaces formal SPEC.md)
 - `/build-plan` (no autoplan, no PLAN.md — TDD + commit is the plan)
-- GStack `/review`, `/codex`, `/cso` (Fast Mode classification excludes security-sensitive changes — those route to Standard or Full)
+- GStack `/review`, `/codex`, `/cso` (Fast Mode classification excludes security-sensitive changes — those route to Standard)
 - `/build-qa` (Fast Mode classification excludes UI flow changes)
 - `/build-ship` push/PR (commits locally only; user invokes `/build-ship` later if wanted)
 
@@ -313,10 +314,6 @@ If you find yourself wanting to skip any of these to "go faster," that's a signa
 ## Standard Mode flow
 
 Today's v0.2.4 pipeline, unchanged. Stages 1–6 as documented in the "Pipeline overview" section above. This is the default routing.
-
-## Full Mode flow
-
-For v0.3.0: Full Mode is equivalent to Standard Mode. The intended additional gates (`/cso` for security-sensitive code, `/design-review` for UI-heavy work, mandatory codebase mapping, stricter ambiguity gate) are deferred to v0.3.1+ pending validation against a real demanding workload. Do not claim Full does more than Standard until v0.3.1 ships.
 
 ## Stage 1: SPEC
 
@@ -382,10 +379,10 @@ The pipeline pauses for user input at exactly these moments:
 1. **Pre-flight (small repo)**: only if repo has <5 source files, ask whether to skip mapping
 2. **Tier classification (ambiguous case only)**: only if heuristics don't clearly point to Fast or Full — recommendation pre-selected
 3. **Fast Mode scope confirmation (rare)**: only if inferred files/behavior may surprise the user
-4. **AI integration prompt** (Standard/Full only): only if AI keywords detected and `--no-ai` not passed
-5. **Stage 1 spec approval** (Standard/Full only): handled inside `/build-spec`
-6. **Stage 2 plan approval** (Standard/Full only): explicit AskUserQuestion gate before exec
-7. **Stage 4 review findings** (Standard/Full only): only if findings require user judgment
+4. **AI integration prompt** (Standard only): only if AI keywords detected and `--no-ai` not passed
+5. **Stage 1 spec approval** (Standard only): handled inside `/build-spec`
+6. **Stage 2 plan approval** (Standard only): explicit AskUserQuestion gate before exec
+7. **Stage 4 review findings** (Standard only): only if findings require user judgment
 
 Aim for the happy path on Standard to need only the plan-approval gate. Aim for Fast Mode to need zero or one gate.
 

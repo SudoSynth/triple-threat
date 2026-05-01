@@ -89,7 +89,7 @@ The legacy dev folders remain on Desktop as a rollback safety net until v0.4.0 s
 - Added adaptive assurance routing inside `build-feature`.
 - Fast Mode is for small, precise, low-risk tasks.
 - Standard Mode is the normal pipeline.
-- Full Mode is currently equivalent to Standard and remains deferred until a real heavy workload validates extra gates.
+- Full Mode shipped in v0.3.0 as equivalent to Standard, with extra gates deferred. Removed in v0.4.0 step 13.
 - Locked decision: do not add a separate `build-fast` skill yet.
 
 ### v0.3.1
@@ -129,7 +129,7 @@ The OpenCode bundle's `.opencode/skills/` ↔ `skills/` and `.opencode/commands/
 - Main entrypoint remains `/build-feature`.
 - v0.3.0 Fast Mode lives inside `build-feature`; do not add `/build-fast` until repeated real usage proves direct invocation is needed.
 - Fast Mode must not become shortcut mode. It still requires TDD for behavior changes, verification, and Superpowers two-stage review.
-- For v0.4.0: Full Mode is being **removed**, not validated. "Full equals Standard" was product debt; Fast + Standard is more honest.
+- For v0.4.0: Full Mode was **removed**, not validated. "Full equals Standard" was product debt; Fast + Standard is more honest.
 - Zips must contain real files, not symlinks.
 - Local installs may use symlinks.
 - OpenCode project-local installs remain real copies for portability.

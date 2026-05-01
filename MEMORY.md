@@ -41,7 +41,7 @@ Per-bundle CHANGELOG.md files contain the detailed release notes.
 
 - Do not add `/build-fast` yet. Fast Mode lives inside `build-feature` until repeated real usage proves direct invocation is needed.
 - Fast Mode must not become shortcut mode. It still requires TDD for behavior changes, verification, and Superpowers two-stage review.
-- Full Mode has historically been "equal to Standard." For v0.4.0, the locked direction is to **remove Full Mode** rather than maintain it as an aspirational label. Ship Fast + Standard only.
+- Full Mode shipped in v0.3.0 as "equal to Standard." For v0.4.0, the locked direction was to **remove Full Mode** rather than maintain it as an aspirational label. Removed in step 13. Ship Fast + Standard only.
 - Zips must contain real files, not symlinks.
 - Local installs may use symlinks.
 - OpenCode project-local installs remain real copies.
@@ -89,7 +89,7 @@ Order matches agreed plan after Claude ↔ OpenCode bounce:
 10. Setup verifier (detect → ask → scoped install → print system commands → doctor pass).
 11. Fresh-machine install test passing end-to-end (`HOME=/tmp/tt-test-home`).
 12. `/build-doctor` version-confusion fix.
-13. Remove Full Mode (collapse to Fast + Standard).
+13. ✓ Remove Full Mode (collapsed to Fast + Standard).
 14. Validate Fast Mode on 5–10 real tasks with written pass/fail notes.
 15. Public-facing README rewrite + CHANGELOG v0.4.0 entry.
 16. Flip public + tag `v0.4.0` + cut GitHub Release.

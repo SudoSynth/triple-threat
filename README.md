@@ -6,7 +6,7 @@ Adaptive build pipeline for AI-assisted software engineering. One set of `/build
 - **GStack** — review, QA, ship, browser workflows
 - **Superpowers** — TDD discipline, planning, code review
 
-`/build-feature <description>` is the main entry point. It classifies the request as Fast (small precise tasks), Standard (default), or Full (risky/demanding work) and runs the appropriate pipeline weight.
+`/build-feature <description>` is the main entry point. It classifies the request as Fast (small precise tasks) or Standard (default — everything else, including risky/demanding work) and runs the appropriate pipeline weight.
 
 ## Layout
 
