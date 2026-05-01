@@ -4,7 +4,7 @@ A portable bundle of the Triple Threat unified build pipeline for **Claude Code*
 
 This bundle includes the orchestrator skill files, so it works even if Triple Threat isn't installed in your `~/.claude/skills/` already.
 
-> **Note**: these instructions describe the legacy zip-based install. For the consolidated repo layout, see the [top-level README](../README.md). Full public install docs ship with v0.4.0.
+> **Note**: this README is the deep-dive for the Claude Code bundle. For the project overview, recommended install via `setup.sh`, status, comparison, and roadmap, start at the [top-level README](../README.md). The bundle-specific instructions below remain valid for users who prefer the zip-based or per-project drop-in install.
 
 ---
 
