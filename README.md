@@ -12,14 +12,36 @@ Adaptive build pipeline for AI-assisted software engineering. One set of `/build
 
 ```
 triple-threat/
-├── claude/      → Claude Code bundle (skills + install scripts)
-├── opencode/    → OpenCode bundle (skills + commands + install scripts)
-├── MEMORY.md    → project memory (current state, locked decisions, backlog)
+├── setup.sh          → top-level verifier-guided setup
+├── claude/           → Claude Code bundle (skills + install scripts)
+├── opencode/         → OpenCode bundle (skills + commands + install scripts)
+├── DEPENDENCIES.md   → pinned upstream dep refs (GSD, GStack, Superpowers)
+├── LICENSE           → MIT
+├── CONTRIBUTING.md   → contributor guide
+├── MEMORY.md         → project memory (current state, locked decisions, backlog)
 ├── PROJECT_MEMORY.md → longer archival narrative
-└── README.md    → this file
+└── README.md         → this file
 ```
 
-Pick the bundle that matches your AI CLI host. Each one self-installs into its host's skill discovery path via `bash install.sh` from inside the bundle directory.
+## Quick start
+
+Verify your environment without changing anything:
+
+```bash
+bash setup.sh --check
+```
+
+Install Triple Threat skills for your host:
+
+```bash
+bash setup.sh --claude        # Claude Code
+bash setup.sh --opencode      # OpenCode
+bash setup.sh --both          # both hosts
+```
+
+`setup.sh` prints the pinned framework install commands (GSD, GStack, Superpowers) but doesn't run them — the underlying frameworks are still installed manually, with eyes open. See [`DEPENDENCIES.md`](DEPENDENCIES.md) for why each ref is pinned.
+
+If you'd rather skip `setup.sh` and run the per-bundle installer directly: `bash claude/install.sh` or `bash opencode/install.sh`.
 
 ## Status
 
@@ -33,6 +55,10 @@ This is a private development repo until v0.4.0 ships.
 
 | File | Purpose |
 |---|---|
+| [`setup.sh`](setup.sh) | Top-level verifier-guided setup (`--check` is read-only) |
+| [`DEPENDENCIES.md`](DEPENDENCIES.md) | Pinned upstream dep refs |
+| [`LICENSE`](LICENSE) | MIT |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contributor guide |
 | [`claude/README.md`](claude/README.md) | Claude bundle: install + usage |
 | [`opencode/README.md`](opencode/README.md) | OpenCode bundle: install + usage |
 | [`claude/CHANGELOG.md`](claude/CHANGELOG.md) | Claude bundle release history |
