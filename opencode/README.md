@@ -125,15 +125,17 @@ OpenCode auto-loads it on session start.
 
 The orchestrator wraps three other frameworks. You must have them installed before `/build-feature` will actually work.
 
+The commands below pin each framework to a known-working version. See [`DEPENDENCIES.md`](../DEPENDENCIES.md) for why these refs are pinned and how to update them.
+
 ### Install GSD (the spine)
 
 ```bash
-npx get-shit-done-cc@latest --opencode --global
+npx get-shit-done-cc@1.38.5 --opencode --global
 ```
 
 **Caveat: GSD's OpenCode installer ships command wrappers, not native OpenCode skills.**
 
-As of v0.1.0 of this bundle, `npx get-shit-done-cc@latest --opencode --global` produces:
+As of v0.1.0 of this bundle, `npx get-shit-done-cc@1.38.5 --opencode --global` produces:
 - `~/.config/opencode/command/gsd-*.md` (command wrappers — note `command/` singular)
 - `~/.config/opencode/get-shit-done/workflows/*.md` (workflow content)
 
@@ -169,7 +171,9 @@ curl -fsSL https://bun.sh/install | bash
 
 mkdir -p ~/.config/opencode/skills
 git clone https://github.com/garrytan/gstack.git ~/.config/opencode/skills/gstack
-cd ~/.config/opencode/skills/gstack && ./setup --host opencode
+cd ~/.config/opencode/skills/gstack
+git checkout 6e1625c0d735f97346ecc3a111d84f8527e04416
+./setup --host opencode
 ```
 
 ### Install Superpowers (TDD discipline)
@@ -177,6 +181,7 @@ cd ~/.config/opencode/skills/gstack && ./setup --host opencode
 ```bash
 mkdir -p ~/.config/opencode/plugins
 git clone https://github.com/obra/superpowers.git ~/.config/opencode/plugins/superpowers
+cd ~/.config/opencode/plugins/superpowers && git checkout v5.0.7
 
 # Symlink each Superpowers skill into ~/.config/opencode/skills/ with prefix
 cd ~/.config/opencode/skills && for skill in ~/.config/opencode/plugins/superpowers/skills/*/; do

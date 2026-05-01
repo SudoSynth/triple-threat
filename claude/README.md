@@ -92,10 +92,12 @@ The `CLAUDE.md` and `CLAUDE.md.template` will auto-deploy to new projects when y
 
 The orchestrator wraps three other frameworks. You must have them installed before `/build-feature` will actually work.
 
+The commands below pin each framework to a known-working version. See [`DEPENDENCIES.md`](../DEPENDENCIES.md) for why these refs are pinned and how to update them.
+
 ### Install GSD (the spine)
 
 ```bash
-npx get-shit-done-cc@latest --claude --global
+npx get-shit-done-cc@1.38.5 --claude --global
 ```
 
 ### Install GStack (review / QA / ship)
@@ -112,13 +114,16 @@ curl -fsSL https://bun.sh/install | bash
 # Use WSL2 and follow the Linux / WSL2 commands.
 
 git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
-cd ~/.claude/skills/gstack && ./setup --host claude
+cd ~/.claude/skills/gstack
+git checkout 6e1625c0d735f97346ecc3a111d84f8527e04416
+./setup --host claude
 ```
 
 ### Install Superpowers (TDD discipline)
 
 ```bash
 git clone https://github.com/obra/superpowers.git ~/.claude/plugins/superpowers
+cd ~/.claude/plugins/superpowers && git checkout v5.0.7
 
 # Symlink each Superpowers skill into ~/.claude/skills/ with prefix
 cd ~/.claude/skills && for skill in ~/.claude/plugins/superpowers/skills/*/; do
