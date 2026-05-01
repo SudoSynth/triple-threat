@@ -90,7 +90,7 @@ Order matches agreed plan after Claude ↔ OpenCode bounce:
 11. Fresh-machine install test passing end-to-end (`HOME=/tmp/tt-test-home`).
 12. `/build-doctor` version-confusion fix.
 13. ✓ Remove Full Mode (collapsed to Fast + Standard).
-14. Validate Fast Mode on 5–10 real tasks with written pass/fail notes.
+14. Validate Fast Mode — tracked in [`docs/fast-mode-validation.md`](docs/fast-mode-validation.md). v0.4.0 gate: 5 of 10 slots completed, ≥2 of those 5 outside this repo. Remaining 5 → v0.4.1 evidence.
 15. Public-facing README rewrite + CHANGELOG v0.4.0 entry.
 16. Flip public + tag `v0.4.0` + cut GitHub Release.
 
