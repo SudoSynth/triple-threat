@@ -4,6 +4,8 @@ A portable bundle of the Triple Threat unified build pipeline adapted for **Open
 
 This bundle includes both OpenCode command files and orchestrator skill files. Both are required. It also includes a project-local `.opencode/` copy so the folder can be used directly as an OpenCode project base.
 
+> **Note**: these instructions describe the legacy zip-based install. For the consolidated repo layout, see the [top-level README](../README.md). Full public install docs ship with v0.4.0.
+
 ---
 
 ## Important: OpenCode commands and skills are separate

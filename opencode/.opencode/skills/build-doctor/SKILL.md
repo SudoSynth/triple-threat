@@ -99,15 +99,15 @@ For each broken symlink found, classify by name:
   ```
   # for a broken skill symlink:
   rm ~/.config/opencode/skills/<name>
-  ln -s "/absolute/path/to/Triple Threat - OpenCode/skills/<name>" \
+  ln -s "/path/to/your/triple-threat/opencode/skills/<name>" \
         ~/.config/opencode/skills/<name>
 
   # for a broken command wrapper symlink:
   rm ~/.config/opencode/commands/<name>.md
-  ln -s "/absolute/path/to/Triple Threat - OpenCode/commands/<name>.md" \
+  ln -s "/path/to/your/triple-threat/opencode/commands/<name>.md" \
         ~/.config/opencode/commands/<name>.md
   ```
-  (Adjust path to wherever the user's bundle lives.)
+  (Replace `/path/to/your/triple-threat` with your clone path. `triple-threat` is the recommended folder name, but you can clone wherever you like.)
 - **External skill** (any name starting with `gstack-`, `superpowers-`, etc., or anything else not Triple Threat): ℹ — pre-existing or external framework issue, NOT a Triple Threat failure. Report for awareness only. Recommend the user check that framework's install instructions; do not surface as a Triple Threat regression.
 
 If any Triple Threat broken symlinks are found, mark this section ❌ in the summary. External broken symlinks alone do not mark the section as failing — they only get an informational line.
