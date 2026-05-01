@@ -1,6 +1,6 @@
 ---
 name: build-doctor
-description: "Read-only diagnostic. Audits the active host's Triple Threat install state across OS, required tools, bundle version, framework presence, command wrappers, skill registry liveness, and project-local install (if applicable). Surfaces what's missing and platform-specific fix commands. Never modifies state. Use when something feels off, when a /build-* command returns 'no matching items', or after install on a new machine."
+description: "Read-only diagnostic. Audits the active host's Triple Threat install state across OS, required tools, bundle and project version, framework presence, command wrappers, skill registry liveness, and project-local install (if applicable). Surfaces what's missing and platform-specific fix commands. Never modifies state. Use when something feels off, when a /build-* command returns 'no matching items', or after install on a new machine."
 ---
 
 # /build-doctor — Triple Threat install diagnostic
@@ -50,9 +50,37 @@ Record present/missing and version. If a tool is missing, surface the platform-s
 - **git:** Direct user to git-scm.com or their package manager
 - **curl:** Generally pre-installed; recommend system package manager if not
 
-## Step 3: Bundle VERSION check
+## Step 3: Triple Threat bundle and project VERSION
 
-If the current working directory contains a `VERSION` file at the root (i.e., the user is running `/build-doctor` from inside an unpacked bundle), read and report it. Otherwise skip silently.
+Two distinct VERSION files may be relevant. Keep them separate; don't conflate them.
+
+**Triple Threat bundle version.** Triple Threat installs build-doctor as a symlink (v0.2.4+); the symlink target points into the unpacked bundle. Resolve the real location to find `<bundle>/VERSION`:
+
+- Prefer any "Loaded from" base path the host exposes for this skill. Use that as the authoritative loaded path.
+- Otherwise inspect the symlink target directly. `readlink -f` is not portable on macOS by default — use plain `readlink` (one-level) or `ls -l`:
+
+```bash
+readlink ~/.config/opencode/skills/build-doctor
+# or, for full visibility:
+ls -l ~/.config/opencode/skills/build-doctor
+```
+
+The OpenCode symlink target points into `<bundle>/skills/build-doctor`. Walk up two levels to the bundle root and read its `VERSION`.
+
+If detection fails (non-symlink install, missing VERSION, etc.), report `unknown` — never guess, never substitute the project VERSION.
+
+**Project VERSION.** If the current working directory has a `VERSION` file AND that file is not the same as the Triple Threat bundle's VERSION (the user is in their own repo, not inside the bundle), read and report it as the *project* version.
+
+**Output.**
+
+```
+Triple Threat bundle: 0.3.1
+Project VERSION:      1.2.0
+```
+
+Show only the lines that are detectable. If neither is detectable, omit the section.
+
+A common pitfall: many user projects have a `VERSION` file at root. This skill must NOT label that as the "Triple Threat bundle version" — they are different artifacts. When in doubt, prefer `unknown` for the bundle line over mislabeling the project file.
 
 ## Step 4: Framework presence (active host: OpenCode)
 
@@ -161,7 +189,8 @@ Plain-text structured report, ordered most-critical first. Example:
 
 ```
 Triple Threat /build-doctor — install diagnostic
-Bundle VERSION: 0.1.0 (if detected)
+Triple Threat bundle: 0.3.1
+Project VERSION:      1.2.0   (omitted if no VERSION file at CWD)
 
 Environment
   Host:         OpenCode
