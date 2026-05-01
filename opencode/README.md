@@ -144,17 +144,18 @@ It does NOT produce `~/.config/opencode/skills/gsd-*/SKILL.md`. The Triple Threa
 - **If Claude Code is also installed** with GSD at `~/.claude/skills/gsd-*/`, OpenCode resolves the skills via cross-host fallback and the pipeline works. `/build-doctor` will flag this as `⚠ cross-host fallback`.
 - **If OpenCode is the only host installed**, those Skill calls will fail and `/build-feature` cannot complete its spec or exec stages.
 
-**Workaround for OpenCode-only machines** (until the upstream installer is fixed):
+**OpenCode-only GSD is currently unsupported.**
 
-```bash
-# Clone GSD source and copy skill dirs into OpenCode skills/
-git clone https://github.com/garrytan/get-shit-done-cc.git /tmp/gsd-src
-mkdir -p ~/.config/opencode/skills
-cp -r /tmp/gsd-src/skills/gsd-* ~/.config/opencode/skills/
-# Restart OpenCode TUI so it rescans skills/
-```
+A previous workaround in this README cloned a GSD source repo and copied skill directories. That no longer works. The repo URL it referenced (`garrytan/get-shit-done-cc`) does not exist, and the actual upstream (`gsd-build/get-shit-done`) does not ship the `skills/gsd-*` layout the copy step assumed. Both verified against the GitHub API.
 
-After restart, run `/build-doctor` to verify each GSD probe loads from `~/.config/opencode/skills/...` (green) instead of `~/.claude/skills/...` (yellow fallback).
+Today's options for an OpenCode-only setup:
+
+1. **Recommended**: also install Claude Code. OpenCode resolves the missing GSD skills via cross-host fallback from `~/.claude/skills/gsd-*/`. `/build-doctor` flags this as `⚠ cross-host fallback`; the pipeline works.
+2. **Or**: stay OpenCode-only and accept that `/build-feature` will fail at the spec and exec stages until the upstream GSD installer ships native OpenCode skills.
+
+`bash setup.sh --opencode` from the Triple Threat repo prints this caveat at install time and asks for confirmation before continuing.
+
+A working OpenCode-only install is tracked as a future improvement — open an issue if you want to help validate it.
 
 ### Install GStack (review / QA / ship)
 
