@@ -24,7 +24,9 @@ The legacy dev folders remain on Desktop as a rollback safety net until v0.4.0 s
 
 ## Current State
 
-- Substance is at v0.3.1 (Claude and OpenCode bundles unchanged from the verified v0.3.1 release).
+- **Public** as of 2026-05-08: <https://github.com/SudoSynth/triple-threat> with `v0.4.0-alpha.1` pre-release tagged. Private Vulnerability Reporting enabled.
+- Final `v0.4.0` release tag still gated on Fast Mode validation evidence (5 / 10 slots in `docs/fast-mode-validation.md`, ≥2 outside this repo). Currently 0 / 5.
+- Substance is at v0.4.0-alpha.1 — pipeline behavior unchanged from v0.3.1; the alpha is open-source-readiness polish + Full Mode removal + bug fixes (build-doctor VERSION disambiguation, OpenCode-only GSD honest framing).
 - v0.3.1 added portable `install.sh` and `uninstall.sh` so end users can install via `bash install.sh` from any unzip location.
 - Zips are intentionally portable and contain real files, not symlinks.
 - Local installed symlinks at `~/.claude/skills/` and `~/.config/opencode/skills/` currently point at the legacy dev folders. They will be repointed to this repo's bundles once new-layout install paths are validated.

@@ -12,7 +12,7 @@ Read this file first before changing Triple Threat. `PROJECT_MEMORY.md` has the 
 - Origin: copied fresh-start from `Triple Threat Development Folder - Claude/` and `Triple Threat Development Folder - OpenCode/` at v0.3.1 substance. Those legacy folders remain on Desktop as a rollback safety net until v0.4.0 ships.
 - Local installed symlinks at `~/.claude/skills/` and `~/.config/opencode/skills/` still point at the legacy dev folders. They will be repointed to this repo's bundles once the new layout's install paths are validated (step 7 of the v0.4.0 backlog).
 - Commit identity: `SudoSynth <281028376+SudoSynth@users.noreply.github.com>`, set via local repo config (no global git config touched).
-- Future GitHub home: `github.com/SudoSynth/triple-threat` (private at first, public at v0.4.0 launch).
+- GitHub home: <https://github.com/SudoSynth/triple-threat> (**public** as of 2026-05-08, with `v0.4.0-alpha.1` pre-release tagged). Final v0.4.0 release still gated on Fast Mode validation evidence (see step 14).
 
 ## What Triple Threat Is
 
@@ -91,8 +91,8 @@ Order matches agreed plan after Claude ↔ OpenCode bounce:
 12. `/build-doctor` version-confusion fix.
 13. ✓ Remove Full Mode (collapsed to Fast + Standard).
 14. Validate Fast Mode — tracked in [`docs/fast-mode-validation.md`](docs/fast-mode-validation.md). v0.4.0 gate: 5 of 10 slots completed, ≥2 of those 5 outside this repo. Remaining 5 → v0.4.1 evidence.
-15. Public-facing README rewrite + CHANGELOG v0.4.0 entry.
-16. Flip public + tag `v0.4.0` + cut GitHub Release.
+15. ✓ Public-facing README rewrite (launch-prep 7/9) + CHANGELOG entry for v0.4.0-alpha.1.
+16. ✓ Flipped public + tagged `v0.4.0-alpha.1` (pre-release) + cut GitHub Pre-release on 2026-05-08. Final `v0.4.0` tag still gated on step 14's validation evidence.
 
 Post-v0.4.0:
 
