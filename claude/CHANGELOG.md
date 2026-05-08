@@ -4,6 +4,48 @@ All notable changes to the Triple Threat — Claude Code bundle.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/). This bundle uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.0-alpha.1] - 2026-05-08
+
+### Added (open-source readiness — first public pre-release)
+
+- **Repo consolidation.** Triple Threat now ships from a single GitHub repo at `github.com/SudoSynth/triple-threat`, with this Claude bundle at `claude/` and the OpenCode bundle at `opencode/`. v0.3.1 dev folders are deprecated.
+- **MIT `LICENSE`** at top level. License audit confirmed all upstream deps (GSD, GStack, Superpowers) are also MIT — zero compatibility friction.
+- **Top-level OSS hygiene files**: `CONTRIBUTING.md`, `SECURITY.md` (PVR-first reporting), `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1 by reference), `ROADMAP.md` (Now / Next / Later + locked decisions), `.github/ISSUE_TEMPLATE/{bug,feature}.md`, `.github/pull_request_template.md`.
+- **`docs/ARCHITECTURE.md`** — how the three frameworks compose, mechanical-vs-prose enforcement distinction, where to make changes.
+- **`docs/fast-mode-validation.md`** — empirical evidence log for Fast Mode prose-level discipline. Final `v0.4.0` release is gated on **5 of 10 entries with ≥2 outside this repo**. Currently 0/5.
+- **`DEPENDENCIES.md`** — pinned upstream refs (GSD `1.38.5`, GStack commit `6e1625c`, Superpowers `v5.0.7`). Floating refs (`@latest`, default-branch clones) replaced with deterministic pins to prevent breakage from upstream churn.
+- **Top-level `setup.sh`** — verifier-guided setup with `--check`, `--claude`, `--opencode`, `--both` modes. Detects required tools, prints pinned framework install commands, runs per-bundle `install.sh` after host confirmation.
+- **`scripts/test-fresh-install.sh`** — end-to-end install/uninstall smoke test against a `mktemp` HOME. Asserts 12 Claude TT symlinks created/removed cleanly. Integrated into CI.
+- **GitHub Actions CI** at `.github/workflows/ci.yml` — runs both bundles' Node test suites (60 tests total), `sync-bundle.sh --check`, and `test-fresh-install.sh` on every push and PR. ~10s per run on `ubuntu-latest`. Uses `actions/checkout@v6` and `actions/setup-node@v6` (Node 24 runtime).
+
+### Changed (this bundle, since v0.3.1)
+
+- **`build-doctor` Step 3 — bundle vs project VERSION disambiguation.** Previous prose conflated the Triple Threat bundle's VERSION with the user's CWD VERSION; common pitfall when running `/build-doctor` from a project root with its own VERSION file. New prose distinguishes `Triple Threat bundle:` and `Project VERSION:` labels, with portable detection via plain `readlink` (no GNU `readlink -f`). Falls back to `unknown` rather than mislabeling.
+- **Full Mode removed.** Fast / Standard tiers only. Risky and demanding work routes to **Standard, not Fast** — Standard runs the full pipeline with `/cso` available conditionally for security-sensitive paths and `/design-review` available for UI-heavy work. Heavier-than-Standard gates remain deferred until validated against real workloads. Tier classification heuristics rewritten (Fast / Standard split with explicit "Standard signals include risky/demanding"). Approval gates' `(Standard/Full only)` qualifiers collapsed to `(Standard only)`.
+- **Top-level `README.md`** rewritten as a public landing: hero + tagline + status banner + comparison table + influences (including [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills) attribution).
+- **Per-bundle README** updated to point at top-level README as project entry point; bundle-specific docs remain as deep reference.
+- **`build-doctor` symlink-fix prose** uses portable `/path/to/your/triple-threat/...` placeholders instead of fixed absolute paths.
+
+### Removed
+
+- The `## Full Mode flow` section from `build-feature/SKILL.md` (it claimed "currently equivalent to Standard," which was aspirational labeling).
+- All `(Standard/Full only)` qualifiers in approval gates.
+
+### Honest framing
+
+This is **pre-1.0 / early access**, not the final v0.4.0 release. The pre-release tag is intentional. Specifically:
+
+- **Standard Mode** is validated and is the safe default. The full 6-stage pipeline has been exercised against real workloads since v0.2.0+, with mechanical gates (`lint-plan-tdd.js`, `audit-tdd-commits.js`) running on every commit and CI push.
+- **Fast Mode** is shipping with prose-level discipline (failing test first + Superpowers two-stage review, both non-negotiable in the SKILL.md). Whether the model honors the prose under load is what `docs/fast-mode-validation.md` tracks. The gap between "claim" and "validated" is what gates the final v0.4.0 release.
+- **OpenCode-only GSD** is currently unsupported. Install Claude Code as cross-host fallback. See `opencode/README.md`.
+- **Cross-platform** (Linux, WSL2): not yet exercised in real usage; CI runs on `ubuntu-latest` so install paths are tested but full pipeline is not.
+
+### Testing
+
+- All CI checks green across the launch-prep batch (8 commits): 4 Node test suites (19 + 11 + 19 + 11 = 60 tests), `sync-bundle.sh --check`, and `scripts/test-fresh-install.sh` (12 Claude + 23 OpenCode symlinks under `mktemp` HOME).
+- `setup.sh --check`, `--claude`, `--opencode`, `--both` exercised manually on macOS.
+- v0.3.1 → v0.4.0-alpha.1 substance unchanged in pipeline behavior; the whole batch is open-source-readiness polish + Full Mode removal + bug fixes.
+
 ## [0.3.1] - 2026-04-29
 
 ### Added (open-source readiness — portable installer)

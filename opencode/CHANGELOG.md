@@ -4,6 +4,51 @@ All notable changes to the Triple Threat — OpenCode bundle.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/). This bundle uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.0-alpha.1] - 2026-05-08
+
+### Added (open-source readiness — first public pre-release)
+
+- **Repo consolidation.** Triple Threat now ships from a single GitHub repo at `github.com/SudoSynth/triple-threat`, with this OpenCode bundle at `opencode/` and the Claude bundle at `claude/`. v0.3.1 dev folders are deprecated.
+- **MIT `LICENSE`** at top level. License audit confirmed all upstream deps (GSD, GStack, Superpowers) are also MIT — zero compatibility friction.
+- **Top-level OSS hygiene files**: `CONTRIBUTING.md`, `SECURITY.md` (PVR-first reporting), `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1 by reference), `ROADMAP.md` (Now / Next / Later + locked decisions), `.github/ISSUE_TEMPLATE/{bug,feature}.md`, `.github/pull_request_template.md`.
+- **`docs/ARCHITECTURE.md`** — how the three frameworks compose, mechanical-vs-prose enforcement distinction, where to make changes.
+- **`docs/fast-mode-validation.md`** — empirical evidence log for Fast Mode prose-level discipline. Final `v0.4.0` release is gated on **5 of 10 entries with ≥2 outside this repo**. Currently 0/5.
+- **`DEPENDENCIES.md`** — pinned upstream refs (GSD `1.38.5`, GStack commit `6e1625c`, Superpowers `v5.0.7`). Floating refs replaced with deterministic pins.
+- **Top-level `setup.sh`** — verifier-guided setup. For `--opencode`, prints an explicit caveat that OpenCode-only GSD native skill installation is not currently validated, and asks for confirmation before continuing.
+- **`scripts/test-fresh-install.sh`** — end-to-end install/uninstall smoke test against a `mktemp` HOME. Asserts 23 OpenCode TT symlinks (12 skills + 11 command wrappers) created/removed cleanly. Pipes `y` to auto-confirm the OpenCode caveat.
+- **GitHub Actions CI** at `.github/workflows/ci.yml` — runs both bundles' Node test suites (60 tests total), `opencode/scripts/sync-bundle.sh --check`, and `test-fresh-install.sh` on every push and PR.
+
+### Changed (this bundle, since v0.3.1)
+
+- **`build-doctor` Step 3 — bundle vs project VERSION disambiguation.** Same as Claude side, with OpenCode-specific symlink walk-up depth (target lives at `<bundle>/skills/build-doctor`, walk up 2 levels to bundle root).
+- **OpenCode-only GSD workaround replaced with honest "unsupported" doc.** Previous workaround referenced `garrytan/get-shit-done-cc` (does not exist on GitHub) and assumed a `skills/gsd-*` layout in the actual upstream `gsd-build/get-shit-done` (which does not ship that layout). Anyone following it got an opaque clone failure. New text in `opencode/README.md` explicitly says OpenCode-only GSD is currently unsupported, recommends Claude Code as cross-host fallback, and points at `setup.sh --opencode`'s install-time caveat.
+- **Full Mode removed.** Fast / Standard tiers only. Risky and demanding work routes to **Standard, not Fast**. Tier classification heuristics rewritten (Fast / Standard split). Approval gates' `(Standard/Full only)` qualifiers collapsed to `(Standard only)`.
+- **Top-level `README.md`** rewritten as a public landing — see Claude bundle changelog for shared-meta details.
+- **Per-bundle README** updated to point at top-level README as project entry point.
+- **`build-doctor` symlink-fix prose** uses portable `/path/to/your/triple-threat/...` placeholders.
+- **OpenCode mirror discipline preserved.** `opencode/scripts/sync-bundle.sh --check` is gated in CI on every push. `--check` returns exit 1 on drift; `sync-bundle.sh` (without flag) propagates canonical → mirror.
+
+### Removed
+
+- The `## Full Mode flow` section from `build-feature/SKILL.md`.
+- All `(Standard/Full only)` qualifiers in approval gates.
+- The broken OpenCode-only GSD workaround block in `opencode/README.md`; replaced with honest "unsupported" doc.
+
+### Honest framing
+
+This is **pre-1.0 / early access**, not the final v0.4.0 release. The pre-release tag is intentional. Specifically:
+
+- **Standard Mode** is validated and is the safe default. Mechanical gates run on every commit and CI push.
+- **Fast Mode** is shipping with prose-level discipline. Real-world validation is tracked in `docs/fast-mode-validation.md`; final v0.4.0 release is gated on 5/10 entries.
+- **OpenCode-only GSD is currently unsupported.** Install Claude Code as cross-host fallback. The previous workaround in this bundle's README was structurally broken on two fronts (URL + assumed upstream layout); now explicitly marked as unsupported with a recommended path.
+- **Cross-platform** (Linux, WSL2): not yet exercised in real usage; CI runs on `ubuntu-latest`.
+
+### Testing
+
+- All CI checks green across the launch-prep batch (8 commits): Node test suites, sync-bundle invariant, fresh-install smoke (23 OpenCode symlinks under `mktemp` HOME).
+- `setup.sh --opencode` exercised with `printf 'y\n'` to auto-confirm the unsupported-GSD caveat.
+- v0.3.1 → v0.4.0-alpha.1 substance unchanged in pipeline behavior; the whole batch is open-source-readiness polish + Full Mode removal + bug fixes.
+
 ## [0.3.1] - 2026-04-29
 
 ### Added (open-source readiness — portable installer)
